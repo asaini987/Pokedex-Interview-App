@@ -11,6 +11,7 @@
 		A80942822E874E100042FB0C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A80942812E874E100042FB0C /* ContentView.swift */; };
 		A80942842E874E110042FB0C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A80942832E874E110042FB0C /* Assets.xcassets */; };
 		A80942872E874E110042FB0C /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A80942862E874E110042FB0C /* Preview Assets.xcassets */; };
+		A834733F2E877712008E2DD1 /* PokedexModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A834733E2E877712008E2DD1 /* PokedexModels.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +20,7 @@
 		A80942812E874E100042FB0C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		A80942832E874E110042FB0C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A80942862E874E110042FB0C /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		A834733E2E877712008E2DD1 /* PokedexModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokedexModels.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,6 +54,7 @@
 			isa = PBXGroup;
 			children = (
 				A809427F2E874E100042FB0C /* PokedexApp.swift */,
+				A834733E2E877712008E2DD1 /* PokedexModels.swift */,
 				A80942812E874E100042FB0C /* ContentView.swift */,
 				A80942832E874E110042FB0C /* Assets.xcassets */,
 				A80942852E874E110042FB0C /* Preview Content */,
@@ -138,6 +141,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A80942822E874E100042FB0C /* ContentView.swift in Sources */,
+				A834733F2E877712008E2DD1 /* PokedexModels.swift in Sources */,
 				A80942802E874E100042FB0C /* PokedexApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
