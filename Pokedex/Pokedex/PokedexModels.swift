@@ -11,18 +11,22 @@ struct PokemonListResponse: Decodable {
     let count: Int
     let next: String?
     let previous: String?
-    let results: [PokemonListItem]
+    let results: [PokemonAPIResource]
 }
 
-struct PokemonListItem: Decodable, Equatable {
+struct PokemonAPIResource: Decodable, Equatable, Identifiable {
     let name: String
     let url: String
+    
+    var id: String {
+        name
+    }
 }
 
 struct PokemonDetail: Decodable {
     let id: Int
     let name: String
-    let sprites: [Sprites]
+    let sprites: Sprites
     
     struct Sprites: Decodable {
         let frontDefault: String?

@@ -29,7 +29,6 @@ enum PokeAPIError: Error, Equatable {
 }
 
 struct PokeAPIClient {
-    private let session = URLSession.shared
     private let baseUrl = "https://pokeapi.co/api/v2/pokemon"
     
     func fetchPokemonList(limit: Int = 20, offset: Int = 0) async throws -> PokemonListResponse {
@@ -44,7 +43,7 @@ struct PokeAPIClient {
         }
 
         do {
-            let (data, response) = try await session.data(from: url)
+            let (data, response) = try await URLSession.shared.data(from: url)
             
             guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
                 throw PokeAPIError.badResponse(statusCode: (response as? HTTPURLResponse)?.statusCode ?? -1)
@@ -64,7 +63,7 @@ struct PokeAPIClient {
         }
 
         do {
-            let (data, response) = try await session.data(from: url)
+            let (data, response) = try await URLSession.shared.data(from: url)
             
             guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
                 throw PokeAPIError.badResponse(statusCode: (response as? HTTPURLResponse)?.statusCode ?? -1)
