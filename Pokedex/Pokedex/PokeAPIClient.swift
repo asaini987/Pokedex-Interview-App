@@ -13,7 +13,6 @@ enum PokeAPIError: Error, Equatable {
     case decodingError
     case networkError(String)
     
-    // A user-friendly message to display in the UI.
     var message: String {
         switch self {
         case .badURL:

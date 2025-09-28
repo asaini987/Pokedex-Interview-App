@@ -13,23 +13,33 @@ struct PokemonCell: View {
 
     var body: some View {
         VStack {
-            if let spriteURL = detail?.sprites.frontDefault,
-               let url = URL(string: spriteURL) {
-                AsyncImage(url: url) { img in
-                    img.resizable().scaledToFit()
-                } placeholder: {
-                    ProgressView()
-                }
-                .frame(width: 72, height: 72)
-            } else {
+            AsyncImage(
+                url: detail?.sprites.frontDefault.flatMap(URL.init)
+            ) { img in
+                img.resizable()
+                    .scaledToFit()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } placeholder: {
                 ProgressView()
-                    .frame(width: 72, height: 72)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
+            .aspectRatio(DrawingConstants.aspectRatio, contentMode: .fit)
             
             Text(resource.name.capitalized)
                 .font(.caption)
+                .lineLimit(DrawingConstants.lineLimit)
+                .padding(.bottom)
         }
-        .padding(6)
+        .background(
+            RoundedRectangle(cornerRadius: DrawingConstants.cornerRadius)
+                .fill(.thinMaterial)
+        )
+    }
+    
+    private struct DrawingConstants {
+        static let aspectRatio: CGFloat = 1
+        static let cornerRadius: CGFloat = 8
+        static let lineLimit: Int = 1
     }
 }
 

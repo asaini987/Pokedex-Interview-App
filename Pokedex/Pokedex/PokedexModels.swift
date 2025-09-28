@@ -23,12 +23,12 @@ struct PokemonAPIResource: Decodable, Equatable, Identifiable {
     }
 }
 
-struct PokemonDetail: Decodable {
+struct PokemonDetail: Decodable, Equatable {
     let id: Int
     let name: String
     let sprites: Sprites
     
-    struct Sprites: Decodable {
+    struct Sprites: Decodable, Equatable {
         let frontDefault: String?
         
         enum CodingKeys: String, CodingKey {

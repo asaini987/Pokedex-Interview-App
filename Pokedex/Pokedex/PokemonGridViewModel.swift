@@ -32,9 +32,9 @@ enum PokemonListState: Equatable {
 
 @Observable
 final class PokemonGridViewModel {
-    var pokeListState: PokemonListState = .idle
-    var details: [String: PokemonDetail] = [:]  // cache by name
-    var selectedDetail: PokemonDetail?
+    private(set) var pokeListState: PokemonListState = .idle
+    private(set) var details: [String: PokemonDetail] = [:]  // cache by name
+    private(set) var selectedDetail: PokemonDetail?
     
     private let api = PokeAPIClient()
     
@@ -44,7 +44,7 @@ final class PokemonGridViewModel {
         }
         
         do {
-            let response = try await api.fetchPokemonList(limit: 20, offset: 0)
+            let response = try await api.fetchPokemonList(limit: 200, offset: 0)
             
             await MainActor.run {
                 pokeListState = .success(response.results)
@@ -72,7 +72,7 @@ final class PokemonGridViewModel {
                 details[pokemonResource.name] = detail
             }
         } catch {
-            print("Failed to fetch image for \(pokemonResource.name)")
+            print("Failed to fetch image for \(pokemonResource.name)") // TODO: add more robust error handling
         }
     }
     
