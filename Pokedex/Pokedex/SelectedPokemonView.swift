@@ -12,26 +12,32 @@ struct SelectedPokemonView: View {
     
     var body: some View {
         VStack {
-            if let detail,
-               let spriteURL = detail.sprites.frontDefault,
-               let url = URL(string: spriteURL) {
-                
-                AsyncImage(url: url) { img in
-                    img.resizable().scaledToFit()
-                } placeholder: {
-                    ProgressView()
+            if let detail {
+                if let spriteURL = detail.sprites.frontDefault,
+                   let url = URL(string: spriteURL) {
+                    AsyncImage(url: url) { img in
+                        img.resizable().scaledToFit()
+                    } placeholder: {
+                        ProgressView()
+                    }
+                    .aspectRatio(DrawingConstants.aspectRatio, contentMode: .fit)
+                    .shadow(radius: DrawingConstants.shadowRadius)
+                } else {
+                    Image(systemName: "questionmark.square.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .foregroundStyle(.secondary)
+                        .aspectRatio(DrawingConstants.aspectRatio, contentMode: .fit)
+                        .shadow(radius: DrawingConstants.shadowRadius)
                 }
-                .aspectRatio(DrawingConstants.aspectRatio, contentMode: .fit)
-                .shadow(radius: DrawingConstants.shadowRadius)
                 
                 Text(detail.name.capitalized)
                     .font(.title2.weight(.semibold))
-                
+
             } else {
                 VStack {
                     pokeBall
                         .aspectRatio(DrawingConstants.aspectRatio, contentMode: .fit)
-                    
                     Text("Tap a Pokémon")
                         .foregroundStyle(.secondary)
                         .padding(.top)

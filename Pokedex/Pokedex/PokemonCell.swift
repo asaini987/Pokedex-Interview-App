@@ -10,21 +10,31 @@ import SwiftUI
 struct PokemonCell: View {
     let resource: PokemonAPIResource
     let detail: PokemonDetail?
-
+    
     var body: some View {
         VStack {
-            AsyncImage(
-                url: detail?.sprites.frontDefault.flatMap(URL.init)
-            ) { img in
-                img.resizable()
-                    .scaledToFit()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-            } placeholder: {
-                ProgressView()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            ZStack {
+                Color.clear
+
+                if let spriteURL = detail?.sprites.frontDefault,
+                   let url = URL(string: spriteURL) {
+                    AsyncImage(url: url) { img in
+                        img.resizable()
+                            .scaledToFit()
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    } placeholder: {
+                        ProgressView()
+                            .scaleEffect(1.2)
+                    }
+                } else if detail != nil { // no sprite
+                    Image(systemName: "questionmark.square.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .foregroundStyle(.secondary)
+                }
             }
             .aspectRatio(DrawingConstants.aspectRatio, contentMode: .fit)
-            
+
             Text(resource.name.capitalized)
                 .font(.caption)
                 .lineLimit(DrawingConstants.lineLimit)

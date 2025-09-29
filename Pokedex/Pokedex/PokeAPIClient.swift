@@ -7,26 +7,6 @@
 
 import Foundation
 
-enum PokeAPIError: Error, Equatable {
-    case badURL
-    case badResponse(statusCode: Int)
-    case decodingError
-    case networkError(String)
-    
-    var message: String {
-        switch self {
-        case .badURL:
-            return "Invalid request URL."
-        case .badResponse(let statusCode):
-            return "Server responded with code \(statusCode)."
-        case .decodingError:
-            return "Failed to process server data."
-        case .networkError(let description):
-            return "Network issue: \(description)"
-        }
-    }
-}
-
 struct PokeAPIClient {
     private let baseUrl = "https://pokeapi.co/api/v2/pokemon"
     

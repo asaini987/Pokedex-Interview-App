@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@MainActor
 struct PokemonGridView: View {
     @State private var viewModel = PokemonGridViewModel()
     
@@ -23,18 +24,9 @@ struct PokemonGridView: View {
 
                 ScrollView {
                     switch viewModel.pokeListState {
-                    case .idle:
-                        Text("Welcome to Pokédex")
-                            .foregroundStyle(.secondary)
-                    
                     case .loading:
                         ProgressView()
                             .scaleEffect(DrawingConstants.loadingScale)
-                    
-                    case .failed(let err):
-                        Text("\(err.message)")
-                            .foregroundStyle(.red)
-                    
                     case .success(let pokemons, let canLoadMore):
                         LazyVGrid(columns: columns,
                                   spacing: DrawingConstants.gridHorizontalSpacing) {
