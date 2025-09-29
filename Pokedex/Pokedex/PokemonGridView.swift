@@ -11,7 +11,8 @@ struct PokemonGridView: View {
     @State private var viewModel = PokemonGridViewModel()
     
     private let columns = [
-        GridItem(.adaptive(minimum: DrawingConstants.cellMin, maximum: DrawingConstants.cellMax), spacing: DrawingConstants.cellSpacing)
+        GridItem(.adaptive(minimum: DrawingConstants.cellMin, maximum: DrawingConstants.cellMax),
+                 spacing: DrawingConstants.cellSpacing)
     ]
 
     var body: some View {
@@ -25,13 +26,18 @@ struct PokemonGridView: View {
                     case .idle:
                         Text("Welcome to Pokédex")
                             .foregroundStyle(.secondary)
+                    
                     case .loading:
                         ProgressView()
                             .scaleEffect(DrawingConstants.loadingScale)
+                    
                     case .failed(let err):
-                        Text("\(err.message)").foregroundStyle(.red)
-                    case .success(let pokemons):
-                        LazyVGrid(columns: columns, spacing: DrawingConstants.gridHorizontalSpacing) {
+                        Text("\(err.message)")
+                            .foregroundStyle(.red)
+                    
+                    case .success(let pokemons, let canLoadMore):
+                        LazyVGrid(columns: columns,
+                                  spacing: DrawingConstants.gridHorizontalSpacing) {
                             ForEach(pokemons) { resource in
                                 PokemonCell(resource: resource,
                                             detail: viewModel.details[resource.name])
@@ -41,6 +47,15 @@ struct PokemonGridView: View {
                                     .onTapGesture {
                                         viewModel.selectPokemon(resource)
                                     }
+                                
+                                // trigger pagination
+                                if resource == pokemons.last, canLoadMore {
+                                    ProgressView()
+                                        .frame(maxWidth: .infinity)
+                                        .task {
+                                            await viewModel.fetchMorePokemons()
+                                        }
+                                }
                             }
                         }
                         .padding(.horizontal)

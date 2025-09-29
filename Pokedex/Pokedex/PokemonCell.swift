@@ -28,8 +28,8 @@ struct PokemonCell: View {
             Text(resource.name.capitalized)
                 .font(.caption)
                 .lineLimit(DrawingConstants.lineLimit)
-                .padding(.bottom)
         }
+        .padding(8)
         .background(
             RoundedRectangle(cornerRadius: DrawingConstants.cornerRadius)
                 .fill(.thinMaterial)

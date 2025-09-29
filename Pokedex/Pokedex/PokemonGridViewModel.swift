@@ -17,8 +17,8 @@ enum PokemonListState: Equatable {
             return true
         case let (.failed(lhsErr), .failed(rhsErr)):
             return lhsErr == rhsErr
-        case let (.success(lhsList), .success(rhsList)):
-            return lhsList == rhsList
+        case let (.success(lhsList, lhsCanLoad), .success(rhsList, rhsCanLoad)):
+            return lhsList == rhsList && lhsCanLoad == rhsCanLoad
         default:
             return false
         }
@@ -27,7 +27,7 @@ enum PokemonListState: Equatable {
     case idle
     case loading
     case failed(PokeAPIError)
-    case success([PokemonAPIResource])
+    case success([PokemonAPIResource], canLoadMore: Bool)
 }
 
 @Observable
@@ -37,17 +37,40 @@ final class PokemonGridViewModel {
     private(set) var selectedDetail: PokemonDetail?
     
     private let api = PokeAPIClient()
+    private var offset: Int = 0
+    private let limit: Int = 20
+    private var isLoadingMore = false
     
     func loadInitialPokemons() async {
+        offset = 0
+        
         await MainActor.run {
             pokeListState = .loading
         }
         
+        await fetchMorePokemons(reset: true)
+    }
+    
+    func fetchMorePokemons(reset: Bool = false) async {
+        guard !isLoadingMore else {
+            return
+        }
+        isLoadingMore = true
+        
         do {
-            let response = try await api.fetchPokemonList(limit: 200, offset: 0)
+            let response = try await api.fetchPokemonList(limit: limit, offset: offset)
+            offset += limit
+            
+            let canLoadMore = (response.results.count == limit)
             
             await MainActor.run {
-                pokeListState = .success(response.results)
+                if reset {
+                    pokeListState = .success(response.results, canLoadMore: canLoadMore)
+                } else if case .success(let existing, _) = pokeListState {
+                    pokeListState = .success(existing + response.results, canLoadMore: canLoadMore)
+                } else {
+                    pokeListState = .success(response.results, canLoadMore: canLoadMore)
+                }
             }
         } catch let error as PokeAPIError {
             await MainActor.run {
@@ -58,21 +81,22 @@ final class PokemonGridViewModel {
                 pokeListState = .failed(.networkError(error.localizedDescription))
             }
         }
+        
+        isLoadingMore = false
     }
     
     func loadDetail(for pokemonResource: PokemonAPIResource) async {
-        if details[pokemonResource.name] != nil { // already cached
+        if details[pokemonResource.name] != nil {
             return
         }
         
         do {
             let detail = try await api.fetchPokemonDetail(idOrName: pokemonResource.name)
-            
             await MainActor.run {
                 details[pokemonResource.name] = detail
             }
         } catch {
-            print("Failed to fetch image for \(pokemonResource.name)") // TODO: add more robust error handling
+            print("Failed to fetch detail for \(pokemonResource.name)") // TODO: add more robust error handling
         }
     }
     
@@ -82,3 +106,5 @@ final class PokemonGridViewModel {
         }
     }
 }
+
+
