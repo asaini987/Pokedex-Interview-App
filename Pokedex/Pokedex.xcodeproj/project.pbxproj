@@ -18,6 +18,7 @@
 		A834734D2E87C69B008E2DD1 /* SelectedPokemonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A834734C2E87C69B008E2DD1 /* SelectedPokemonView.swift */; };
 		A883581D2E8A7B37002D9EA3 /* CachedAsyncImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A883581C2E8A7B37002D9EA3 /* CachedAsyncImageView.swift */; };
 		A89994302E8BB737000E110A /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = A899942F2E8BB737000E110A /* ImageCache.swift */; };
+		A8D7A63A2E8C4D850064A225 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D7A6392E8C4D850064A225 /* WelcomeView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +34,7 @@
 		A834734C2E87C69B008E2DD1 /* SelectedPokemonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedPokemonView.swift; sourceTree = "<group>"; };
 		A883581C2E8A7B37002D9EA3 /* CachedAsyncImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedAsyncImageView.swift; sourceTree = "<group>"; };
 		A899942F2E8BB737000E110A /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
+		A8D7A6392E8C4D850064A225 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +68,7 @@
 			isa = PBXGroup;
 			children = (
 				A809427F2E874E100042FB0C /* PokedexApp.swift */,
+				A8D7A6392E8C4D850064A225 /* WelcomeView.swift */,
 				A834733E2E877712008E2DD1 /* PokedexModels.swift */,
 				A83473442E87A7AE008E2DD1 /* PokeAPIClient.swift */,
 				A83473462E87B194008E2DD1 /* PokemonGridViewModel.swift */,
@@ -163,6 +166,7 @@
 				A883581D2E8A7B37002D9EA3 /* CachedAsyncImageView.swift in Sources */,
 				A89994302E8BB737000E110A /* ImageCache.swift in Sources */,
 				A83473492E87BBF0008E2DD1 /* PokemonGridView.swift in Sources */,
+				A8D7A63A2E8C4D850064A225 /* WelcomeView.swift in Sources */,
 				A834733F2E877712008E2DD1 /* PokedexModels.swift in Sources */,
 				A83473452E87A7AE008E2DD1 /* PokeAPIClient.swift in Sources */,
 				A834734B2E87BC5F008E2DD1 /* PokemonCell.swift in Sources */,

@@ -30,6 +30,7 @@ struct PokemonCell: View {
 
             Text(resource.name.capitalized)
                 .font(.caption)
+                .fontWeight(.bold)
                 .lineLimit(DrawingConstants.lineLimit)
         }
         .padding(DrawingConstants.cellPadding)
@@ -50,3 +51,7 @@ struct PokemonCell: View {
 #Preview {
     PokemonCell(resource: PokemonAPIResource(name: "hello", url: "url"), detail: nil)
 }
+
+
+
+

@@ -19,8 +19,8 @@ struct PokemonGridView: View {
     var body: some View {
         VStack {
             Text("Pokédex")
-                    .font(.largeTitle.bold())
-                    .padding(.top)
+                .font(.largeTitle.bold())
+                .padding(.top)
             
             SelectedPokemonView(detail: viewModel.selectedDetail)
                 .padding(.bottom)
@@ -42,6 +42,13 @@ struct PokemonGridView: View {
                                 .onTapGesture {
                                     viewModel.selectPokemon(resource)
                                 }
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: DrawingConstants.cornerRadius)
+                                        .stroke(
+                                            (viewModel.selectedDetail?.name == resource.name) ? Color.yellow : Color.clear,
+                                            lineWidth: DrawingConstants.lineWidth
+                                        )
+                                )
                             
                             // trigger pagination
                             if resource == pokemons.last && canLoadMore {
@@ -57,10 +64,11 @@ struct PokemonGridView: View {
                 }
             }
         }
-        .navigationTitle("Pokédex")
+        .navigationBarBackButtonHidden(true)
         .task {
             await viewModel.loadInitialPokemons()
         }
+        
     }
     
     var errorDisplay: some View {
@@ -83,9 +91,14 @@ struct PokemonGridView: View {
         static let cellSpacing: CGFloat = 12
         static let loadingScale: CGFloat = 1.3
         static let gridHorizontalSpacing: CGFloat = 12
+        
+        static let cornerRadius: CGFloat = 8
+        static let lineWidth: CGFloat = 3
     }
 }
 
 #Preview {
     PokemonGridView()
 }
+
+
