@@ -13,7 +13,7 @@ import Observation
 final class PokemonGridViewModel {
     private(set) var pokeListState: PokemonListState = .loading
     private(set) var lastError: PokeAPIError? = nil
-    private(set) var details: [String: PokemonDetail] = [:]  // cache URLs by name
+    private(set) var details: [String: PokemonDetail] = [:]  // store image URLs by name
     private(set) var selectedDetail: PokemonDetail? = nil
         
     private let api = PokeAPIClient()
@@ -28,6 +28,17 @@ final class PokemonGridViewModel {
         await fetchMorePokemons(reset: true)
     }
     
+    /// Fetches the next page of Pokémon from the PokeAPI and updates the grid state.
+    ///
+    /// This method handles pagination by advancing the `offset` and using `limit`
+    /// to request more results. When `reset` is `true`, the current list is replaced
+    /// with a fresh page. Otherwise, new results are appended to the existing list.
+    ///
+    /// - Parameters:
+    ///    - reset: A Boolean value that determines whether to reset the list before
+    ///     fetching more Pokémon
+    ///
+    /// - Returns: Void. The function updates `pokeListState` and `lastError`.
     func fetchMorePokemons(reset: Bool = false) async {
         guard !isLoadingMore else {
             return
@@ -44,7 +55,7 @@ final class PokemonGridViewModel {
             offset += limit
             let canLoadMore = response.results.count == limit
             
-            lastError = nil // clear on success
+            lastError = nil // clear error on success
             
             if reset {
                 pokeListState = .success(response.results, canLoadMore: canLoadMore)
@@ -54,28 +65,40 @@ final class PokemonGridViewModel {
                 pokeListState = .success(response.results, canLoadMore: canLoadMore)
             }
         } catch let err as PokeAPIError {
+            if case .networkError(let msg) = err, msg == "cancelled" {
+                return
+            }
             lastError = err
         } catch {
             lastError = .networkError(error.localizedDescription)
         }
     }
     
+    /// Fetches and caches detail data for a Pokémon if not already loaded.
+    ///
+    /// - Parameters:
+    ///   - pokemonResource: The resource describing the Pokémon.
+    ///
+    /// - Returns: Void. Updates the `details` dictionary.
+    ///
     func loadDetail(for pokemonResource: PokemonAPIResource) async {
-        if details[pokemonResource.name] != nil { return }
+        if details[pokemonResource.name] != nil {
+            return
+        }
         
         do {
             let detail = try await api.fetchPokemonDetail(idOrName: pokemonResource.name)
             details[pokemonResource.name] = detail
-        } catch let error as PokeAPIError {
-            if case .networkError(let msg) = error, msg == "cancelled" {
-                return // ignore cancelled requests
-            }
-            print("Failed for \(pokemonResource.name): \(error.message)")
         } catch {
-            print("Failed for \(pokemonResource.name): \(error.localizedDescription)")
+            if let apiError = error as? PokeAPIError {
+                if case .networkError(let msg) = apiError, msg == "cancelled" {
+                    return
+                }
+            }
         }
     }
     
+    // MARK: User Intent(s)
     func selectPokemon(_ pokemonResource: PokemonAPIResource) {
         if let cached = details[pokemonResource.name] {
             selectedDetail = cached

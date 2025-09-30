@@ -16,8 +16,7 @@ struct PokemonCell: View {
             ZStack {
                 Color.clear
 
-                if let spriteURL = detail?.sprites.frontDefault,
-                   let url = URL(string: spriteURL) {
+                if let spriteURL = detail?.sprites.frontDefault, let url = URL(string: spriteURL) {
                     CachedAsyncImage(url: url)
                         .id(url)
                 } else if detail != nil { // no sprite

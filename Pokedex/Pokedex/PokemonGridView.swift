@@ -17,46 +17,62 @@ struct PokemonGridView: View {
     ]
 
     var body: some View {
-        NavigationStack {
-            VStack {
-                SelectedPokemonView(detail: viewModel.selectedDetail)
-                    .padding(.bottom)
+        VStack {
+            Text("Pokédex")
+                    .font(.largeTitle.bold())
+                    .padding(.top)
+            
+            SelectedPokemonView(detail: viewModel.selectedDetail)
+                .padding(.bottom)
+            
+            errorDisplay
 
-                ScrollView {
-                    switch viewModel.pokeListState {
-                    case .loading:
-                        ProgressView()
-                            .scaleEffect(DrawingConstants.loadingScale)
-                    case .success(let pokemons, let canLoadMore):
-                        LazyVGrid(columns: columns,
-                                  spacing: DrawingConstants.gridHorizontalSpacing) {
-                            ForEach(pokemons) { resource in
-                                PokemonCell(resource: resource,
-                                            detail: viewModel.details[resource.name])
-                                    .task {
-                                        await viewModel.loadDetail(for: resource)
-                                    }
-                                    .onTapGesture {
-                                        viewModel.selectPokemon(resource)
-                                    }
-                                
-                                // trigger pagination
-                                if resource == pokemons.last, canLoadMore {
-                                    ProgressView()
-                                        .frame(maxWidth: .infinity)
-                                        .task {
-                                            await viewModel.fetchMorePokemons()
-                                        }
+            ScrollView {
+                switch viewModel.pokeListState {
+                case .loading:
+                    ProgressView()
+                        .scaleEffect(DrawingConstants.loadingScale)
+                case .success(let pokemons, let canLoadMore):
+                    LazyVGrid(columns: columns, spacing: DrawingConstants.gridHorizontalSpacing) {
+                        ForEach(pokemons) { resource in
+                            PokemonCell(resource: resource, detail: viewModel.details[resource.name])
+                                .task {
+                                    await viewModel.loadDetail(for: resource)
                                 }
+                                .onTapGesture {
+                                    viewModel.selectPokemon(resource)
+                                }
+                            
+                            // trigger pagination
+                            if resource == pokemons.last && canLoadMore {
+                                ProgressView()
+                                    .frame(maxWidth: .infinity)
+                                    .task {
+                                        await viewModel.fetchMorePokemons()
+                                    }
                             }
                         }
-                        .padding(.horizontal)
                     }
+                    .padding(.horizontal)
                 }
             }
-            .navigationTitle("Pokédex")
-            .task {
-                await viewModel.loadInitialPokemons()
+        }
+        .navigationTitle("Pokédex")
+        .task {
+            await viewModel.loadInitialPokemons()
+        }
+    }
+    
+    var errorDisplay: some View {
+        ZStack {
+            if let error = viewModel.lastError {
+                Text(error.message)
+                    .font(.caption)
+                    .foregroundColor(.red)
+            } else {
+                Text("Placeholder") // to keep layout from changing
+                    .font(.caption)
+                    .hidden()
             }
         }
     }

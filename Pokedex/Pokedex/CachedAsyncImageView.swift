@@ -17,7 +17,7 @@ struct CachedAsyncImage: View {
         ZStack {
             // loading
             ProgressView()
-                .scaleEffect(1.2)
+                .scaleEffect(DrawingConstants.progressScale)
                 .opacity(showingProgress ? 1 : 0)
 
             if let uiImage {
@@ -31,19 +31,19 @@ struct CachedAsyncImage: View {
                     .foregroundStyle(.secondary)
             }
         }
-        .aspectRatio(1, contentMode: .fit)
+        .aspectRatio(DrawingConstants.aspectRatio, contentMode: .fit)
         .task {
             guard let url, uiImage == nil, !didFail else {
                 return
             }
 
-            // check NSCache (decoded UIImage in memory)
+            // check and load from NSCache
             if let cached = ImageCache.shared.get(forKey: url.absoluteString) {
                 uiImage = cached
                 return
             }
 
-            // check load from URLCache/network
+            // check and load from URLCache/network
             if let image = await loadImage(from: url) {
                 ImageCache.shared.set(image, forKey: url.absoluteString) // store in NSCache
                 uiImage = image
@@ -60,11 +60,16 @@ struct CachedAsyncImage: View {
     private func loadImage(from url: URL) async -> UIImage? {
         do {
             let (data, _) = try await CachedURLSession.shared.data(from: url)
-            return await Task.detached(priority: .userInitiated) {
+            return await Task.detached(priority: .userInitiated) { // run image decoding on background thread
                 UIImage(data: data)
             }.value
         } catch {
             return nil
         }
+    }
+    
+    private struct DrawingConstants {
+        static let aspectRatio: CGFloat = 1
+        static let progressScale: CGFloat = 1.2
     }
 }
