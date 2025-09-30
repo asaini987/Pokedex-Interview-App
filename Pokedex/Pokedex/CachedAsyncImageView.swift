@@ -15,6 +15,11 @@ struct CachedAsyncImage: View {
 
     var body: some View {
         ZStack {
+            // loading
+            ProgressView()
+                .scaleEffect(1.2)
+                .opacity(showingProgress ? 1 : 0)
+
             if let uiImage {
                 Image(uiImage: uiImage)
                     .resizable()
@@ -24,51 +29,42 @@ struct CachedAsyncImage: View {
                     .resizable()
                     .scaledToFit()
                     .foregroundStyle(.secondary)
-            } else if url != nil {
-                ProgressView()
-                    .scaleEffect(1.2)
-            } else {
-                Image(systemName: "questionmark.square.fill")
-                    .resizable()
-                    .scaledToFit()
-                    .foregroundStyle(.secondary)
             }
         }
         .aspectRatio(1, contentMode: .fit)
         .task {
-            if let url, uiImage == nil, !didFail {
-                uiImage = await loadImage(from: url)
-                if uiImage == nil {
-                    didFail = true
-                }
+            guard let url, uiImage == nil, !didFail else {
+                return
+            }
+
+            // check NSCache (decoded UIImage in memory)
+            if let cached = ImageCache.shared.get(forKey: url.absoluteString) {
+                uiImage = cached
+                return
+            }
+
+            // check load from URLCache/network
+            if let image = await loadImage(from: url) {
+                ImageCache.shared.set(image, forKey: url.absoluteString) // store in NSCache
+                uiImage = image
+            } else {
+                didFail = true
             }
         }
     }
 
+    private var showingProgress: Bool {
+        uiImage == nil && !didFail && url != nil
+    }
+
     private func loadImage(from url: URL) async -> UIImage? {
         do {
-            let (data, response) = try await cachedSession.data(from: url)
-            if let http = response as? HTTPURLResponse {
-//                        print("Headers for \(url): \(http.allHeaderFields)")
-                    }
-            return UIImage(data: data)
+            let (data, _) = try await CachedURLSession.shared.data(from: url)
+            return await Task.detached(priority: .userInitiated) {
+                UIImage(data: data)
+            }.value
         } catch {
-//            print("Failed to load \(url): \(error.localizedDescription)")
             return nil
         }
     }
 }
-
-private let cachedSession: URLSession = {
-    let cache = URLCache(
-        memoryCapacity: 50 * 1024 * 1024, // 50 mb
-        diskCapacity: 200 * 1024 * 1024, // 200 mb
-        diskPath: "PokemonImageCache"
-    )
-
-    let config = URLSessionConfiguration.default
-    config.urlCache = cache
-    config.requestCachePolicy = .returnCacheDataElseLoad
-    
-    return URLSession(configuration: config)
-}()

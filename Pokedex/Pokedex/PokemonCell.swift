@@ -33,7 +33,7 @@ struct PokemonCell: View {
                 .font(.caption)
                 .lineLimit(DrawingConstants.lineLimit)
         }
-        .padding(8)
+        .padding(DrawingConstants.cellPadding)
         .background(
             RoundedRectangle(cornerRadius: DrawingConstants.cornerRadius)
                 .fill(.thinMaterial)
@@ -44,6 +44,7 @@ struct PokemonCell: View {
         static let aspectRatio: CGFloat = 1
         static let cornerRadius: CGFloat = 8
         static let lineLimit: Int = 1
+        static let cellPadding: CGFloat = 8
     }
 }
 

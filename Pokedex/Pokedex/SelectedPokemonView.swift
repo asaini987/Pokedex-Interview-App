@@ -57,7 +57,6 @@ struct SelectedPokemonView: View {
             Circle()
                 .stroke(.black, lineWidth: DrawingConstants.outerRingLineWidth)
             
-            // Horizontal diameter line that stops at the inner ring
             HStack {
                 Rectangle()
                     .fill(.black)

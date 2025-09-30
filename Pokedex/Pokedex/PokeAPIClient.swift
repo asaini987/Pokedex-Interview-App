@@ -29,7 +29,7 @@ struct PokeAPIClient {
             }
             
             return try JSONDecoder().decode(PokemonListResponse.self, from: data)
-        } catch let error as DecodingError {
+        } catch is DecodingError {
             throw PokeAPIError.decodingError
         } catch {
             throw PokeAPIError.networkError(error.localizedDescription)
@@ -49,7 +49,7 @@ struct PokeAPIClient {
             }
             
             return try JSONDecoder().decode(PokemonDetail.self, from: data)
-        } catch let error as DecodingError {
+        } catch is DecodingError {
             throw PokeAPIError.decodingError
         } catch {
             throw PokeAPIError.networkError(error.localizedDescription)

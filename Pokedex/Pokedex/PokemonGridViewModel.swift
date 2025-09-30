@@ -13,7 +13,7 @@ import Observation
 final class PokemonGridViewModel {
     private(set) var pokeListState: PokemonListState = .loading
     private(set) var lastError: PokeAPIError? = nil
-    private(set) var details: [String: PokemonDetail] = [:]  // cache by name
+    private(set) var details: [String: PokemonDetail] = [:]  // cache URLs by name
     private(set) var selectedDetail: PokemonDetail? = nil
         
     private let api = PokeAPIClient()
