@@ -27,7 +27,6 @@ The app demonstrates:
 - ProgressView placeholders while loading  
 - Fallbacks (question mark icon if sprite is missing)  
 - Error handling  
-- Silent ignore of cancelled network requests (common during fast scrolling)  
 - Inline error display for list fetch failures  
 - Adaptive grid layout (no hard-coded cell sizes; scales per device)  
 - Built entirely with SwiftUI + async/await  
@@ -81,7 +80,7 @@ For this project, I chose to implement a custom caching layer using a hybrid of 
 
 ### Error Handling
 - Grid fetch errors update a shared `lastError` displayed as small text above the grid.  
-- Cell detail fetch errors are logged but not shown (since cells already handle missing sprites gracefully).  
+- Cell detail fetch errors and missing sprites are handled gracefully.  
 - Image load errors or missing sprites show a question mark icon.  
 
 ### UI Design Choices
