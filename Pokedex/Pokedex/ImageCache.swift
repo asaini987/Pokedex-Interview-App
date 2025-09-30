@@ -18,7 +18,7 @@ final class CachedURLSession {
 
         let config = URLSessionConfiguration.default
         config.urlCache = cache
-        config.requestCachePolicy = .returnCacheDataElseLoad
+        config.requestCachePolicy = .useProtocolCachePolicy
 
         return URLSession(configuration: config)
     }()
