@@ -11,8 +11,8 @@ import UIKit
 final class CachedURLSession {
     static let shared: URLSession = {
         let cache = URLCache(
-            memoryCapacity: 50 * 1024 * 1024, // 50 MB stored in memory
-            diskCapacity: 200 * 1024 * 1024,  // 200 MB stored on disk
+            memoryCapacity: 20 * 1024 * 1024, // 20 MB stored in memory
+            diskCapacity: 100 * 1024 * 1024,  // 100 MB stored on disk
             diskPath: "PokemonImageCache"
         )
 
