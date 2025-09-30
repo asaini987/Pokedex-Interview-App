@@ -15,12 +15,8 @@ struct SelectedPokemonView: View {
             if let detail {
                 if let spriteURL = detail.sprites.frontDefault,
                    let url = URL(string: spriteURL) {
-                    AsyncImage(url: url) { img in
-                        img.resizable().scaledToFit()
-                    } placeholder: {
-                        ProgressView()
-                    }
-                    .aspectRatio(DrawingConstants.aspectRatio, contentMode: .fit)
+                    CachedAsyncImage(url: url) 
+                        .id(url).aspectRatio(DrawingConstants.aspectRatio, contentMode: .fit)
                     .shadow(radius: DrawingConstants.shadowRadius)
                 } else {
                     Image(systemName: "questionmark.square.fill")
@@ -61,6 +57,20 @@ struct SelectedPokemonView: View {
             Circle()
                 .stroke(.black, lineWidth: DrawingConstants.outerRingLineWidth)
             
+            // Horizontal diameter line that stops at the inner ring
+            HStack {
+                Rectangle()
+                    .fill(.black)
+                    .frame(height: 7)
+                
+                Spacer()
+                    .frame(width: DrawingConstants.scaleEffect * 2, height: 1)
+                
+                Rectangle()
+                    .fill(.black)
+                    .frame(height: 7)
+            }
+            
             Circle()
                 .fill(.white)
                 .overlay(
@@ -82,8 +92,8 @@ struct SelectedPokemonView: View {
         // Pokeball constants
         static let rotationEffect: Double = 180
         static let outerRingLineWidth: CGFloat = 4
-        static let innerRingLineWidth: CGFloat = 12
-        static let scaleEffect: CGFloat = 0.3
+        static let innerRingLineWidth: CGFloat = 20
+        static let scaleEffect: CGFloat = 0.25
         static let trimStart: CGFloat = 0.5
         static let trimEnd: CGFloat = 1.0
     }

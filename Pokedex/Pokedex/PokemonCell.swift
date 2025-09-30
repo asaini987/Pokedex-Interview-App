@@ -18,14 +18,8 @@ struct PokemonCell: View {
 
                 if let spriteURL = detail?.sprites.frontDefault,
                    let url = URL(string: spriteURL) {
-                    AsyncImage(url: url) { img in
-                        img.resizable()
-                            .scaledToFit()
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    } placeholder: {
-                        ProgressView()
-                            .scaleEffect(1.2)
-                    }
+                    CachedAsyncImage(url: url)
+                        .id(url)
                 } else if detail != nil { // no sprite
                     Image(systemName: "questionmark.square.fill")
                         .resizable()
