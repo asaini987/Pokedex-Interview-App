@@ -51,7 +51,3 @@ struct PokemonCell: View {
 #Preview {
     PokemonCell(resource: PokemonAPIResource(name: "hello", url: "url"), detail: nil)
 }
-
-
-
-
