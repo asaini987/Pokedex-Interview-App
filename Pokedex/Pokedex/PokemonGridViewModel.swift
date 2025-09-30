@@ -15,7 +15,7 @@ final class PokemonGridViewModel {
     private(set) var lastError: PokeAPIError? = nil
     private(set) var details: [String: PokemonDetail] = [:]  // store image URLs by name
     private(set) var selectedDetail: PokemonDetail? = nil
-        
+    
     private let api = PokeAPIClient()
     
     private var offset: Int = 0

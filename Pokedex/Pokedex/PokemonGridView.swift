@@ -41,6 +41,9 @@ struct PokemonGridView: View {
                                 }
                                 .onTapGesture {
                                     viewModel.selectPokemon(resource)
+                                    Task {
+                                        await viewModel.loadDetail(for: resource)
+                                    }
                                 }
                                 .overlay(
                                     RoundedRectangle(cornerRadius: DrawingConstants.cornerRadius)
